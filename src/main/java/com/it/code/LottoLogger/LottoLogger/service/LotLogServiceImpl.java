@@ -21,7 +21,7 @@ public class LotLogServiceImpl implements LotLogService {
 
     @Override
     public LottoPlay addLottoPlay(LottoPlay lottoPlay) {
-        log.info("Adding Lotto Play --+++========>{}","lottoPlay");
+        log.info("Adding Lotto Play --+++========>{}", "lottoPlay");
         return lottoPlayRepository.save(lottoPlay);
     }
 
@@ -51,13 +51,13 @@ public class LotLogServiceImpl implements LotLogService {
     @Override
     public Set<Integer> generateMegaNumber() {
         Set<Integer> megaSet = new HashSet<>();
-        return addMegaPowerSequence(MEGA_BALL,megaSet,generateMegaBalls(),generateGoldenBall()).getMegaBallSequence();
+        return addMegaPowerSequence(MEGA_BALL, megaSet, generateMegaBalls(), generateGoldenBall()).getMegaBallSequence();
     }
 
     @Override
     public Set<Integer> generatePowerNumber() {
         Set<Integer> powerSet = new HashSet<>();
-        return addMegaPowerSequence(POWER_BALL,powerSet,generatePowerBalls(),generateRedBall()).getPowerBallSequence();
+        return addMegaPowerSequence(POWER_BALL, powerSet, generatePowerBalls(), generateRedBall()).getPowerBallSequence();
     }
 
 
@@ -113,21 +113,21 @@ public class LotLogServiceImpl implements LotLogService {
     /**
      * Add sequence number
      *
-     * @param gameName String name of the game
-     * @param megaPowSeq Set<Integer>
+     * @param gameName      String name of the game
+     * @param megaPowSeq    Set<Integer>
      * @param generatedBall INTEGER
-     * @param lastBall INTEGER
+     * @param lastBall      INTEGER
      * @return LottoPlay
      */
     @Override
     public LottoPlay addMegaPowerSequence(String gameName, Set<Integer> megaPowSeq, int generatedBall, int lastBall) {
 
         int numbOfDig = 6;
-        int ballNumb=generatedBall;
+        int ballNumb = generatedBall;
 
         IntStream.range(START_AT_0, numbOfDig).forEach(i -> {
 
-                    if ((megaPowSeq.size() == 0 || megaPowSeq.size() < numbOfDig) && !megaPowSeq.contains(ballNumb) ) {
+                    if ((megaPowSeq.size() == 0 || megaPowSeq.size() < numbOfDig) && !megaPowSeq.contains(ballNumb)) {
 
                         megaPowSeq.add(ballNumb);
 
@@ -144,9 +144,9 @@ public class LotLogServiceImpl implements LotLogService {
 
         LottoPlay lottoPlay = new LottoPlay();
 
-        switch (gameName){
+        switch (gameName) {
 
-            case MEGA_BALL:{
+            case MEGA_BALL: {
 
                 lottoPlay.setGameName(gameName);
                 lottoPlay.setMegaBallSequence(megaPowSeq);
@@ -166,12 +166,11 @@ public class LotLogServiceImpl implements LotLogService {
                 break;
             }
 
-            default:{
+            default: {
 
-                log.info("Unknown game name {}",gameName);
+                log.info("Unknown game name {}", gameName);
             }
         }
-
 
 
         return lottoPlay;
