@@ -71,7 +71,7 @@ public class LotLogServiceImpl implements LotLogService {
     @Override
     public int generatePowerBalls() {
 
-        return random.nextInt(MAX_POWER_DIGIT + BOUND_INCREMENT);
+        return random.nextInt(MAX_POWER_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
     }
 
     /**
@@ -83,7 +83,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateMegaBalls() {
-        return random.nextInt(MAX_MEGA_DIGIT + BOUND_INCREMENT);
+        return random.nextInt(MAX_MEGA_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
     }
 
     /**
@@ -95,7 +95,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateGoldenBall() {
-        return random.nextInt(MAX_GOLDEN_DIGIT + BOUND_INCREMENT);
+        return random.nextInt(MAX_GOLDEN_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
     }
 
     /**
@@ -107,7 +107,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateRedBall() {
-        return random.nextInt(MAX_RED_DIGIT + BOUND_INCREMENT);
+        return random.nextInt(MAX_RED_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
     }
 
     /**
@@ -124,35 +124,35 @@ public class LotLogServiceImpl implements LotLogService {
 
         int numbOfDig = 6;
         int ballNumb = generatedBall;
-
-        IntStream.range(START_AT_0, numbOfDig).forEach(i -> {
-
-                    if ((megaPowSeq.size() == 0 || megaPowSeq.size() < numbOfDig) && !megaPowSeq.contains(ballNumb)) {
-
-                        megaPowSeq.add(ballNumb);
-
-                    } else {
-                        addMegaPowerSequence(gameName, megaPowSeq, generatedBall, lastBall);
-                    }
-
-                    if (i == megaPowSeq.size() - 1) {
-
-                        megaPowSeq.add(lastBall);
-                    }
-                }
-        );
-
         LottoPlay lottoPlay = new LottoPlay();
+
+
+
+
 
         switch (gameName) {
 
             case MEGA_BALL: {
 
                 lottoPlay.setGameName(gameName);
-                lottoPlay.setMegaBallSequence(megaPowSeq);
 
                 lottoPlay.setGoldMegaBall(lastBall);
-                addLottoPlay(lottoPlay);
+                log.info("lotto ================================================================="+lottoPlay.getGoldMegaBall());
+
+                                lottoPlay.setWhiteMegaBalls(generateMegaBalls());
+
+                                megaPowSeq.add(generateMegaBalls());
+                                megaPowSeq.add(generateMegaBalls());
+                                megaPowSeq.add(generateMegaBalls());
+                                megaPowSeq.add(generateMegaBalls());
+                                megaPowSeq.add(generateMegaBalls());
+
+
+
+
+
+                lottoPlay.setMegaBallSequence(megaPowSeq);
+                //addLottoPlay(lottoPlay);
 
                 break;
             }
@@ -161,7 +161,27 @@ public class LotLogServiceImpl implements LotLogService {
                 lottoPlay.setPowerBallSequence(megaPowSeq);
 
                 lottoPlay.setRedPowerBall(lastBall);
-                addLottoPlay(lottoPlay);
+                log.info("lotto ================================================================="+lottoPlay);
+//                IntStream.range(START_AT_0, numbOfDig).forEach(i -> {
+//
+//                if ((megaPowSeq.size() == 0 || megaPowSeq.size() < numbOfDig) && !megaPowSeq.contains(ballNumb)) {
+//
+//                    lottoPlay.setWhitePowerBalls(generatePowerBalls());
+//
+//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
+//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
+//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
+//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
+//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
+//
+//
+//                } else {
+//                    addMegaPowerSequence(gameName, megaPowSeq, generatedBall, lastBall);
+//                }
+//                        }
+//                );
+
+               // addLottoPlay(lottoPlay);
 
                 break;
             }

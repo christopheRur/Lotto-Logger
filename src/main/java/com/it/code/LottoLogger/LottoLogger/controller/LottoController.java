@@ -22,14 +22,14 @@ public class LottoController {
     public ResponseEntity<?> getMegaSeq() {
 
         log.info("+===> {}", HttpStatus.CREATED);
-        return new ResponseEntity<>(lotLogService.generateMegaBalls(), HttpStatus.CREATED);
+        return new ResponseEntity<>(lotLogService.generateMegaNumber(), HttpStatus.CREATED);
     }
 
     @GetMapping("/power")
     public ResponseEntity<?> getPowerSeq() {
 
         log.info("+===> {}", HttpStatus.CREATED);
-        return new ResponseEntity<>(lotLogService.generatePowerBalls(), HttpStatus.CREATED);
+        return new ResponseEntity<>(lotLogService.generatePowerNumber(), HttpStatus.CREATED);
     }
 
     @GetMapping("/lot_play")
