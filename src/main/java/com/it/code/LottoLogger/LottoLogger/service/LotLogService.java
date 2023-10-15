@@ -8,14 +8,13 @@ import java.util.Set;
 
 @Service
 public interface LotLogService {
-
+    public List<LottoPlay> getLottoPlay(String lottoName);
     public LottoPlay addLottoPlay(LottoPlay lottoPlay);
 
-    public LottoPlay getLottoPlay(String lotto);
     public List<LottoPlay> getLottoPlayList();
 
-    public Integer[] getMegaBalls(String gameName);
-    public Integer[] getPowerBalls(String gameName);
+    public List<LottoPlay> getMegaBalls(String gameName);
+    public List<LottoPlay> getPowerBalls(String gameName);
 
     public Integer[] generateMegaNumber();
     public Integer[] generatePowerNumber();

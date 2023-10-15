@@ -28,11 +28,13 @@ public class LotLogServiceImpl implements LotLogService {
     }
 
     @Override
-    public LottoPlay getLottoPlay(String lottoName) {
-        return lottoPlayRepository.findLottoPlayByGameName(lottoName);
+    public List<LottoPlay> getLottoPlay(String lottoName) {
+        return lottoPlayRepository.findAllByGameName(lottoName);
     }
 
     /**
+     * Retrieve a list of all available LottoPlay instances
+     *
      * @return
      */
     @Override
@@ -40,22 +42,45 @@ public class LotLogServiceImpl implements LotLogService {
         return lottoPlayRepository.findAll();
     }
 
+    /**
+     * Retrieve MegaBalls of all available LottoPlay instances
+     *
+     * @param gameName
+     * @return
+     */
     @Override
-    public Integer[] getMegaBalls(String gameName) {
-        return getLottoPlay(gameName).getMegaBallSequence();
+    public List<LottoPlay> getMegaBalls(String gameName) {
+        return getLottoPlay(gameName);
     }
 
+    /**
+     * Retrieve PowerBalls of all available LottoPlay instances
+     *
+     * @param gameName
+     * @return
+     */
     @Override
-    public Integer[] getPowerBalls(String gameName) {
-        return getLottoPlay(gameName).getPowerBallSequence();
+    public List<LottoPlay> getPowerBalls(String gameName) {
+
+        return getLottoPlay(gameName);
     }
 
+    /**
+     * Will generate MegaNumber when invoked
+     *
+     * @return
+     */
     @Override
     public Integer[] generateMegaNumber() {
         Set<Integer> megaSet = new HashSet<>();
         return addMegaPowerSequence(MEGA_BALL, megaSet, generateMegaBalls(), generateGoldenBall()).getMegaBallSequence();
     }
 
+    /**
+     * Will generate PowerNumber when invoked
+     *
+     * @return
+     */
     @Override
     public Integer[] generatePowerNumber() {
         Set<Integer> powerSet = new HashSet<>();
@@ -125,49 +150,58 @@ public class LotLogServiceImpl implements LotLogService {
     public LottoPlay addMegaPowerSequence(String gameName, Set<Integer> megaPowSeq, int generatedBall, int lastBall) {
 
         LottoPlay lottoPlay = new LottoPlay();
+        try {
+
+            switch (gameName) {
+
+                case MEGA_BALL: {
+
+                    lottoPlay.setGameName(gameName);
+
+                    lottoPlay.setGoldMegaBall(lastBall);
+
+                    lottoPlay.setMegaBallSequence(addBallsValues(megaPowSeq));
+
+                    log.info("=-->" + lottoPlay.getGoldMegaBall().toString());
+
+                    checkStatus(megaPowSeq, lottoPlay);
+                    addLottoPlay(lottoPlay);
+
+                    break;
+                }
+                case POWER_BALL: {
+                    lottoPlay.setGameName(gameName);
 
 
-        switch (gameName) {
+                    lottoPlay.setRedPowerBall(lastBall);
+                    lottoPlay.setPowerBallSequence(addBallsValues(megaPowSeq));
+                    log.info("=->" + megaPowSeq.size());
 
-            case MEGA_BALL: {
+                    checkStatus(megaPowSeq, lottoPlay);
 
-                lottoPlay.setGameName(gameName);
+                    addLottoPlay(lottoPlay);
 
-                lottoPlay.setGoldMegaBall(lastBall);
+                    break;
+                }
 
-                lottoPlay.setMegaBallSequence(addBallsValues(megaPowSeq));
+                default: {
 
-                log.info("=-->" + lottoPlay.getGoldMegaBall().toString());
-
-                checkStatus(megaPowSeq, lottoPlay);
-                addLottoPlay(lottoPlay);
-
-                break;
+                    log.info("Unknown game name {}", gameName);
+                }
             }
-            case POWER_BALL: {
-                lottoPlay.setGameName(gameName);
 
+            return lottoPlay;
 
-                lottoPlay.setRedPowerBall(lastBall);
-                lottoPlay.setPowerBallSequence(addBallsValues(megaPowSeq));
-                log.info("=->" + megaPowSeq.size());
+        } catch (Exception e) {
 
-                checkStatus(megaPowSeq, lottoPlay);
+            log.error("Error on:: addMegaPowerSequence =>{}", e.getLocalizedMessage());
 
-                addLottoPlay(lottoPlay);
-
-                break;
-            }
-
-            default: {
-
-                log.info("Unknown game name {}", gameName);
-            }
+            return lottoPlay;
         }
 
-        return lottoPlay;
 
     }
+
 
     /**
      * check if size is 5 and set complete true
@@ -176,16 +210,23 @@ public class LotLogServiceImpl implements LotLogService {
      * @param lottoPlay
      */
     private void checkStatus(Set<Integer> megaPowSeq, LottoPlay lottoPlay) {
-        if (megaPowSeq.size() == 5) {
 
-            lottoPlay.setSize(megaPowSeq.size());
-            lottoPlay.setIsComplete(Boolean.TRUE);
+        try {
+            if (megaPowSeq.size() == 5) {
 
-        } else {
+                lottoPlay.setSize(megaPowSeq.size());
+                lottoPlay.setIsComplete(Boolean.TRUE);
 
-            lottoPlay.setSize(megaPowSeq.size());
-            lottoPlay.setIsComplete(Boolean.FALSE);
+            } else {
+
+                lottoPlay.setSize(megaPowSeq.size());
+                lottoPlay.setIsComplete(Boolean.FALSE);
+            }
+        } catch (Exception e) {
+            log.error("Error checking Status =>{}", e.getLocalizedMessage());
         }
+
+
     }
 
     /**
@@ -195,18 +236,27 @@ public class LotLogServiceImpl implements LotLogService {
      * @return
      */
     private Integer[] addBallsValues(Set<Integer> megaPowSeq) {
-        megaPowSeq.add(generateMegaBalls());
-        megaPowSeq.add(generateMegaBalls());
-        megaPowSeq.add(generateMegaBalls());
-        megaPowSeq.add(generateMegaBalls());
-        megaPowSeq.add(generateMegaBalls());
 
-        Integer[] seqArray = new Integer[megaPowSeq.size()];
+        try {
 
-        megaPowSeq.toArray(seqArray);
 
-        Arrays.sort(seqArray);
+            megaPowSeq.add(generateMegaBalls());
+            megaPowSeq.add(generateMegaBalls());
+            megaPowSeq.add(generateMegaBalls());
+            megaPowSeq.add(generateMegaBalls());
+            megaPowSeq.add(generateMegaBalls());
 
-        return seqArray;
+            Integer[] seqArray = new Integer[megaPowSeq.size()];
+
+            megaPowSeq.toArray(seqArray);
+
+            Arrays.sort(seqArray);
+
+            return seqArray;
+        } catch (Exception e) {
+            log.error("Error on::  addBallsValues=>{}", e.getLocalizedMessage());
+            return null;
+
+        }
     }
 }

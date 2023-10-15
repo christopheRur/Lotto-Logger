@@ -4,10 +4,13 @@ import com.it.code.LottoLogger.LottoLogger.entity.LottoPlay;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface LottoPlayRepository extends JpaRepository<LottoPlay,Long> {
     LottoPlay findLottoPlayByGameName(String gameName);
+
+    List<LottoPlay> findAllByGameName(String gameName);
 
 }
