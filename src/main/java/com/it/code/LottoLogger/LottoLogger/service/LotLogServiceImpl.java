@@ -3,13 +3,10 @@ package com.it.code.LottoLogger.LottoLogger.service;
 import com.it.code.LottoLogger.LottoLogger.entity.LottoPlay;
 import com.it.code.LottoLogger.LottoLogger.repository.LottoPlayRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.IntStream;
+import java.util.*;
 
 import static com.it.code.LottoLogger.LottoLogger.constants.Constant.*;
 
@@ -19,9 +16,14 @@ public class LotLogServiceImpl implements LotLogService {
     private Random random = new Random();
     private LottoPlayRepository lottoPlayRepository;
 
+    @Autowired
+    public LotLogServiceImpl(LottoPlayRepository lottoPlyRep) {
+        this.lottoPlayRepository = lottoPlyRep;
+    }
+
     @Override
     public LottoPlay addLottoPlay(LottoPlay lottoPlay) {
-        log.info("Adding Lotto Play --+++========>{}", "lottoPlay");
+        log.info("Adding Lotto Play ---+====>{}", "lottoPlay");
         return lottoPlayRepository.save(lottoPlay);
     }
 
@@ -39,23 +41,23 @@ public class LotLogServiceImpl implements LotLogService {
     }
 
     @Override
-    public Set<Integer> getMegaBalls(String gameName) {
+    public Integer[] getMegaBalls(String gameName) {
         return getLottoPlay(gameName).getMegaBallSequence();
     }
 
     @Override
-    public Set<Integer> getPowerBalls(String gameName) {
+    public Integer[] getPowerBalls(String gameName) {
         return getLottoPlay(gameName).getPowerBallSequence();
     }
 
     @Override
-    public Set<Integer> generateMegaNumber() {
+    public Integer[] generateMegaNumber() {
         Set<Integer> megaSet = new HashSet<>();
         return addMegaPowerSequence(MEGA_BALL, megaSet, generateMegaBalls(), generateGoldenBall()).getMegaBallSequence();
     }
 
     @Override
-    public Set<Integer> generatePowerNumber() {
+    public Integer[] generatePowerNumber() {
         Set<Integer> powerSet = new HashSet<>();
         return addMegaPowerSequence(POWER_BALL, powerSet, generatePowerBalls(), generateRedBall()).getPowerBallSequence();
     }
@@ -71,7 +73,7 @@ public class LotLogServiceImpl implements LotLogService {
     @Override
     public int generatePowerBalls() {
 
-        return random.nextInt(MAX_POWER_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
+        return random.nextInt(MAX_POWER_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
     }
 
     /**
@@ -83,7 +85,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateMegaBalls() {
-        return random.nextInt(MAX_MEGA_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
+        return random.nextInt(MAX_MEGA_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
     }
 
     /**
@@ -95,7 +97,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateGoldenBall() {
-        return random.nextInt(MAX_GOLDEN_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
+        return random.nextInt(MAX_GOLDEN_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
     }
 
     /**
@@ -107,7 +109,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateRedBall() {
-        return random.nextInt(MAX_RED_DIGIT + BOUND_INCREMENT)+ BOUND_INCREMENT;
+        return random.nextInt(MAX_RED_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
     }
 
     /**
@@ -122,12 +124,7 @@ public class LotLogServiceImpl implements LotLogService {
     @Override
     public LottoPlay addMegaPowerSequence(String gameName, Set<Integer> megaPowSeq, int generatedBall, int lastBall) {
 
-        int numbOfDig = 6;
-        int ballNumb = generatedBall;
         LottoPlay lottoPlay = new LottoPlay();
-
-
-
 
 
         switch (gameName) {
@@ -137,51 +134,27 @@ public class LotLogServiceImpl implements LotLogService {
                 lottoPlay.setGameName(gameName);
 
                 lottoPlay.setGoldMegaBall(lastBall);
-                log.info("lotto ================================================================="+lottoPlay.getGoldMegaBall());
 
-                                lottoPlay.setWhiteMegaBalls(generateMegaBalls());
+                lottoPlay.setMegaBallSequence(addBallsValues(megaPowSeq));
 
-                                megaPowSeq.add(generateMegaBalls());
-                                megaPowSeq.add(generateMegaBalls());
-                                megaPowSeq.add(generateMegaBalls());
-                                megaPowSeq.add(generateMegaBalls());
-                                megaPowSeq.add(generateMegaBalls());
+                log.info("=-->" + lottoPlay.getGoldMegaBall().toString());
 
-
-
-
-
-                lottoPlay.setMegaBallSequence(megaPowSeq);
-                //addLottoPlay(lottoPlay);
+                checkStatus(megaPowSeq, lottoPlay);
+                addLottoPlay(lottoPlay);
 
                 break;
             }
             case POWER_BALL: {
                 lottoPlay.setGameName(gameName);
-                lottoPlay.setPowerBallSequence(megaPowSeq);
+
 
                 lottoPlay.setRedPowerBall(lastBall);
-                log.info("lotto ================================================================="+lottoPlay);
-//                IntStream.range(START_AT_0, numbOfDig).forEach(i -> {
-//
-//                if ((megaPowSeq.size() == 0 || megaPowSeq.size() < numbOfDig) && !megaPowSeq.contains(ballNumb)) {
-//
-//                    lottoPlay.setWhitePowerBalls(generatePowerBalls());
-//
-//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
-//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
-//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
-//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
-//                    megaPowSeq.add(lottoPlay.getWhitePowerBalls());
-//
-//
-//                } else {
-//                    addMegaPowerSequence(gameName, megaPowSeq, generatedBall, lastBall);
-//                }
-//                        }
-//                );
+                lottoPlay.setPowerBallSequence(addBallsValues(megaPowSeq));
+                log.info("=->" + megaPowSeq.size());
 
-               // addLottoPlay(lottoPlay);
+                checkStatus(megaPowSeq, lottoPlay);
+
+                addLottoPlay(lottoPlay);
 
                 break;
             }
@@ -192,8 +165,48 @@ public class LotLogServiceImpl implements LotLogService {
             }
         }
 
-
         return lottoPlay;
 
+    }
+
+    /**
+     * check if size is 5 and set complete true
+     *
+     * @param megaPowSeq
+     * @param lottoPlay
+     */
+    private void checkStatus(Set<Integer> megaPowSeq, LottoPlay lottoPlay) {
+        if (megaPowSeq.size() == 5) {
+
+            lottoPlay.setSize(megaPowSeq.size());
+            lottoPlay.setIsComplete(Boolean.TRUE);
+
+        } else {
+
+            lottoPlay.setSize(megaPowSeq.size());
+            lottoPlay.setIsComplete(Boolean.FALSE);
+        }
+    }
+
+    /**
+     * A set into an array, it will also add values to a set eliminating duplicates
+     *
+     * @param megaPowSeq
+     * @return
+     */
+    private Integer[] addBallsValues(Set<Integer> megaPowSeq) {
+        megaPowSeq.add(generateMegaBalls());
+        megaPowSeq.add(generateMegaBalls());
+        megaPowSeq.add(generateMegaBalls());
+        megaPowSeq.add(generateMegaBalls());
+        megaPowSeq.add(generateMegaBalls());
+
+        Integer[] seqArray = new Integer[megaPowSeq.size()];
+
+        megaPowSeq.toArray(seqArray);
+
+        Arrays.sort(seqArray);
+
+        return seqArray;
     }
 }

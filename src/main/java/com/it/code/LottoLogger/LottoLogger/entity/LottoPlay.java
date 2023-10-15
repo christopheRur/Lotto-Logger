@@ -20,14 +20,15 @@ public class LottoPlay {
     private Long id;
 
     private String gameName;
+    private Integer size;
+    private Boolean isComplete;
 
-    private Integer whiteMegaBalls;
     private Integer goldMegaBall;
-    private Set<Integer> megaBallSequence;
+    private Integer[] megaBallSequence;
 
-    private Integer whitePowerBalls;
+
     private Integer redPowerBall;
-    private Set<Integer> powerBallSequence;
+    private Integer[] powerBallSequence;
 
 
 }

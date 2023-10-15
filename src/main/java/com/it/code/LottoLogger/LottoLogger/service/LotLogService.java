@@ -14,11 +14,11 @@ public interface LotLogService {
     public LottoPlay getLottoPlay(String lotto);
     public List<LottoPlay> getLottoPlayList();
 
-    public Set<Integer> getMegaBalls(String gameName);
-    public Set<Integer> getPowerBalls(String gameName);
+    public Integer[] getMegaBalls(String gameName);
+    public Integer[] getPowerBalls(String gameName);
 
-    public Set<Integer> generateMegaNumber();
-    public Set<Integer> generatePowerNumber();
+    public Integer[] generateMegaNumber();
+    public Integer[] generatePowerNumber();
 
     public int generatePowerBalls();
     public int generateMegaBalls();
