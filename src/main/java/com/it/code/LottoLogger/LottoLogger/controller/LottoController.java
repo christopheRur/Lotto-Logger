@@ -27,6 +27,13 @@ public class LottoController {
         log.info("+===> {}", HttpStatus.CREATED);
         return new ResponseEntity<>(lotLogService.generateMegaNumber(), HttpStatus.CREATED);
     }
+    @GetMapping("/gold")
+    public ResponseEntity<?> getMegaGold() {
+
+        log.info("+===> {}", HttpStatus.CREATED);
+        return new ResponseEntity<>(lotLogService.generateGoldenBall(), HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/mega-plays")
     public ResponseEntity<?> getMegaPlays() {
@@ -40,6 +47,13 @@ public class LottoController {
 
         log.info("+===> {}", HttpStatus.CREATED);
         return new ResponseEntity<>(lotLogService.generatePowerNumber(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/red")
+    public ResponseEntity<?> getRedBall() {
+
+        log.info("+===> {}", HttpStatus.CREATED);
+        return new ResponseEntity<>(lotLogService.generateRedBall(), HttpStatus.CREATED);
     }
 
     @GetMapping("/power-plays")

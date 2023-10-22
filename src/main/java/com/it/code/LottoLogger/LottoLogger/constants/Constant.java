@@ -9,6 +9,8 @@ public class Constant {
     public static final int BOUND_INCREMENT= 1;
     public static final String MEGA_BALL= "MegaBall";
     public static final String POWER_BALL= "PowerBall";
+    public static final int MAX_SEQUENCE_COUNT= 160;
+
 
 
 

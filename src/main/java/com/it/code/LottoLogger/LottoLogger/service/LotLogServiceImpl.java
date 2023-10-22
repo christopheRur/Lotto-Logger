@@ -19,16 +19,19 @@ public class LotLogServiceImpl implements LotLogService {
     @Autowired
     public LotLogServiceImpl(LottoPlayRepository lottoPlyRep) {
         this.lottoPlayRepository = lottoPlyRep;
+
     }
 
     @Override
     public LottoPlay addLottoPlay(LottoPlay lottoPlay) {
+        deleteJunkData();
         log.info("Adding Lotto Play ---+====>{}", "lottoPlay");
         return lottoPlayRepository.save(lottoPlay);
     }
 
     @Override
     public List<LottoPlay> getLottoPlay(String lottoName) {
+
         return lottoPlayRepository.findAllByGameName(lottoName);
     }
 
@@ -39,6 +42,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public List<LottoPlay> getLottoPlayList() {
+
         return lottoPlayRepository.findAll();
     }
 
@@ -50,6 +54,8 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public List<LottoPlay> getMegaBalls(String gameName) {
+
+
         return getLottoPlay(gameName);
     }
 
@@ -63,6 +69,15 @@ public class LotLogServiceImpl implements LotLogService {
     public List<LottoPlay> getPowerBalls(String gameName) {
 
         return getLottoPlay(gameName);
+    }
+
+    public void deleteJunkData(){
+
+        if(getPowerBalls(POWER_BALL).size()==MAX_SEQUENCE_COUNT ||
+                getMegaBalls(MEGA_BALL).size()==MAX_SEQUENCE_COUNT){
+            log.info("Deleting Sequence Numbers...");
+            lottoPlayRepository.deleteAll();
+        }
     }
 
     /**
@@ -98,7 +113,7 @@ public class LotLogServiceImpl implements LotLogService {
     @Override
     public int generatePowerBalls() {
 
-        return random.nextInt(MAX_POWER_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
+        return random.nextInt(MAX_POWER_DIGIT) + BOUND_INCREMENT;
     }
 
     /**
@@ -110,7 +125,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateMegaBalls() {
-        return random.nextInt(MAX_MEGA_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
+        return random.nextInt(MAX_MEGA_DIGIT) + BOUND_INCREMENT;
     }
 
     /**
@@ -122,7 +137,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateGoldenBall() {
-        return random.nextInt(MAX_GOLDEN_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
+        return random.nextInt(MAX_GOLDEN_DIGIT) + BOUND_INCREMENT;
     }
 
     /**
@@ -134,7 +149,7 @@ public class LotLogServiceImpl implements LotLogService {
      */
     @Override
     public int generateRedBall() {
-        return random.nextInt(MAX_RED_DIGIT + BOUND_INCREMENT) + BOUND_INCREMENT;
+        return random.nextInt(MAX_RED_DIGIT) + BOUND_INCREMENT;
     }
 
     /**
