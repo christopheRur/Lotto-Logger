@@ -24,6 +24,7 @@ public class LotLogServiceImpl implements LotLogService {
 
     @Override
     public LottoPlay addLottoPlay(LottoPlay lottoPlay) {
+       // lottoPlayRepository.deleteAll();
         deleteJunkData();
         log.info("Adding Lotto Play ---+====>{}", "lottoPlay");
         return lottoPlayRepository.save(lottoPlay);
@@ -175,7 +176,7 @@ public class LotLogServiceImpl implements LotLogService {
 
                     lottoPlay.setGoldMegaBall(lastBall);
 
-                    lottoPlay.setMegaBallSequence(addBallsValues(megaPowSeq));
+                    lottoPlay.setMegaBallSequence(addBallsValues(megaPowSeq, lastBall));
 
                     log.info("=-->" + lottoPlay.getGoldMegaBall().toString());
 
@@ -189,7 +190,7 @@ public class LotLogServiceImpl implements LotLogService {
 
 
                     lottoPlay.setRedPowerBall(lastBall);
-                    lottoPlay.setPowerBallSequence(addBallsValues(megaPowSeq));
+                    lottoPlay.setPowerBallSequence(addBallsValues(megaPowSeq, lastBall));
                     log.info("=->" + megaPowSeq.size());
 
                     checkStatus(megaPowSeq, lottoPlay);
@@ -250,28 +251,24 @@ public class LotLogServiceImpl implements LotLogService {
      * @param megaPowSeq
      * @return
      */
-    private Integer[] addBallsValues(Set<Integer> megaPowSeq) {
-
+    private Integer[] addBallsValues(Set<Integer> megaPowSeq, int lastBall) {
         try {
+            for (int i = 0; i < 5; i++) {
+                megaPowSeq.add(generateMegaBalls());
+            }
 
-
-            megaPowSeq.add(generateMegaBalls());
-            megaPowSeq.add(generateMegaBalls());
-            megaPowSeq.add(generateMegaBalls());
-            megaPowSeq.add(generateMegaBalls());
-            megaPowSeq.add(generateMegaBalls());
-
-            Integer[] seqArray = new Integer[megaPowSeq.size()];
-
-            megaPowSeq.toArray(seqArray);
-
+            Integer[] seqArray = megaPowSeq.toArray(new Integer[megaPowSeq.size()]);
             Arrays.sort(seqArray);
 
-            return seqArray;
+            // Add lastBall to the end of the array
+            Integer[] resultArray = new Integer[seqArray.length + 1];
+            System.arraycopy(seqArray, 0, resultArray, 0, seqArray.length);
+            resultArray[resultArray.length - 1] = lastBall;
+log.info("resultArray: last - {}", lastBall);
+            return resultArray;
         } catch (Exception e) {
-            log.error("Error on::  addBallsValues=>{}", e.getLocalizedMessage());
+            log.error("Error on:: addBallsValues=>{}", e.getMessage());
             return null;
-
         }
     }
 }

@@ -13,4 +13,5 @@ public interface LottoPlayRepository extends JpaRepository<LottoPlay,Long> {
 
     List<LottoPlay> findAllByGameName(String gameName);
 
+
 }
