@@ -24,7 +24,7 @@ public class LotLogServiceImpl implements LotLogService {
 
     @Override
     public LottoPlay addLottoPlay(LottoPlay lottoPlay) {
-       // lottoPlayRepository.deleteAll();
+        // lottoPlayRepository.deleteAll();
         deleteJunkData();
         log.info("Adding Lotto Play ---+====>{}", "lottoPlay");
         return lottoPlayRepository.save(lottoPlay);
@@ -72,10 +72,10 @@ public class LotLogServiceImpl implements LotLogService {
         return getLottoPlay(gameName);
     }
 
-    public void deleteJunkData(){
+    public void deleteJunkData() {
 
-        if(getPowerBalls(POWER_BALL).size()==MAX_SEQUENCE_COUNT ||
-                getMegaBalls(MEGA_BALL).size()==MAX_SEQUENCE_COUNT){
+        if (getPowerBalls(POWER_BALL).size() == MAX_SEQUENCE_COUNT ||
+                getMegaBalls(MEGA_BALL).size() == MAX_SEQUENCE_COUNT) {
             log.info("Deleting Sequence Numbers...");
             lottoPlayRepository.deleteAll();
         }
@@ -264,7 +264,7 @@ public class LotLogServiceImpl implements LotLogService {
             Integer[] resultArray = new Integer[seqArray.length + 1];
             System.arraycopy(seqArray, 0, resultArray, 0, seqArray.length);
             resultArray[resultArray.length - 1] = lastBall;
-log.info("resultArray: last - {}", lastBall);
+            log.info("resultArray: last - {}", lastBall);
             return resultArray;
         } catch (Exception e) {
             log.error("Error on:: addBallsValues=>{}", e.getMessage());
