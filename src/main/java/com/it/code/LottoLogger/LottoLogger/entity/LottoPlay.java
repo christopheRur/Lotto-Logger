@@ -26,6 +26,7 @@ public class LottoPlay {
 
 
     private Integer redPowerBall;
+
     private Integer[] powerBallSequence;
 
 
