@@ -52,6 +52,7 @@ class LottoLoggerApplicationTests {
         Mockito.when(service.addMegaPowerSequence("MegaBall", set, 4, 24)).thenReturn(lottoPlay);
 
     }
+
     @Test
     public void testAddLottoPlay() {
 
