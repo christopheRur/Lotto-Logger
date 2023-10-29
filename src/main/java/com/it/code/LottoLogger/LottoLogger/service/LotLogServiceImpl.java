@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static com.it.code.LottoLogger.LottoLogger.constants.Constant.*;
-
 @Slf4j
 @Service
 public class LotLogServiceImpl implements LotLogService {
